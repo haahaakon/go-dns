@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: go-dns
+  namespace: go-dns
+  labels:
+    app: go-dns
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: go-dns
+  template:
+    metadata:
+      labels:
+        app: go-dns
+    spec:
+      containers:
+      - name: go-dns
+        image: ghcr.io/haahaakon/go-dns:latest
+        ports:
+        - containerPort: 5353
+          name: udp
+          protocol: UDP
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "100m"
+          limits:
+            memory: "128Mi"
+            cpu: "200m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: go-dns
+  namespace: go-dns
+  labels:
+    app: go-dns
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: "go-ptr-dns.br0.no"
+spec:
+  ipFamilies:
+  - IPv6
+  ipFamilyPolicy: SingleStack
+  type: LoadBalancer
+  ports:
+  - port: 53
+    targetPort: 5353
+    protocol: UDP
+    name: udp
+  selector:
+    app: go-dns
