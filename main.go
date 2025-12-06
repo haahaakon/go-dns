@@ -14,8 +14,20 @@ type dnsHandler struct{}
 func resolve(domain string, qtype uint16) ([]dns.RR, error) {
 	m := new(dns.Msg)
 	m.SetQuestion(dns.Fqdn(domain), qtype)
-
 	rr, err := dns.NewRR(fmt.Sprintf("%s PTR this.is.a.test", domain))
+
+	if domain == "1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.f.4.b.0.8.2.0.0.0.7.4.0.1.0.0.2.ip6.arpa." {
+		rr, err = dns.NewRR(fmt.Sprintf("%s PTR one.two.three.four", domain))
+	}
+
+	if domain == "2.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.f.4.b.0.8.2.0.0.0.7.4.0.1.0.0.2.ip6.arpa." {
+		rr, err = dns.NewRR(fmt.Sprintf("%s PTR two.three.four", domain))
+	}
+
+	if domain == "3.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.f.4.b.0.8.2.0.0.0.7.4.0.1.0.0.2.ip6.arpa." {
+		rr, err = dns.NewRR(fmt.Sprintf("%s PTR three.four", domain))
+	}
+
 	if err != nil {
 		log.Fatal(err)
 	}
