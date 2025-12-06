@@ -1,6 +1,6 @@
 module github.com/haahaakon/go-dns
 
-go 1.25.1
+go 1.25.5
 
 require github.com/miekg/dns v1.1.68
 
